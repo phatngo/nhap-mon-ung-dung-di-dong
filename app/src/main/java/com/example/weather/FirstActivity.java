@@ -7,6 +7,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 
@@ -17,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -39,16 +42,17 @@ public class FirstActivity extends AppCompatActivity {
 
     String City;
 
+
     TextView view_city;
     TextView view_temp;
     TextView view_mains;
 
     ImageView view_weather;
-    MultiAutoCompleteTextView edit_search;
+    AutoCompleteTextView view_search;
     Button btn_search;
     Button btn_xemthem;
 
-    String main,temp,day,days,tempmin,tempmax,sunset,sunrise,pressure,humidity,wind,fells_like;
+    String main,temp,day,days,tempmin,tempmax,sunset,sunrise,pressure,humidity,wind,fells_like,city_name;
 
     private String[] localtion={"An Giang"," Vũng Tàu","  Bạc Liêu","Bắc Kạn"," Bắc Giang","Bắc Ninh","Bến Tre","Bình Dương","Bình Định",
             "Bình Phước","Bình Thuận","Cà Mau","Cao Bằng","Cần Thơ","Đà Nẵng","Đắk Lắk","Đắk Nông","Đồng Nai","Đồng Tháp",
@@ -60,29 +64,68 @@ public class FirstActivity extends AppCompatActivity {
         view_city=findViewById(R.id.txt_city);
         view_temp=findViewById(R.id.txt_temp);
         view_mains=findViewById(R.id.txt_desc);
-        edit_search=findViewById(R.id.edit_search);
+        view_search=findViewById(R.id.view_search);
 
 
         view_weather=findViewById(R.id.img_weather);
         btn_search=findViewById(R.id.btn_search);
         btn_xemthem=findViewById(R.id.btn_xemthem);
+
     }
+
+
+    //visible btn_xemthem
+    public TextWatcher textWatcher=new TextWatcher()
+    {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            String city_name=view_search.getText().toString().trim();
+            if(!city_name.isEmpty())
+            {
+                btn_xemthem.setEnabled(true);
+                Log.d("true or false", String.valueOf(!city_name.isEmpty()));
+            }
+            else
+            {
+                btn_xemthem.setEnabled(false);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s)
+        {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
         Anhxa();
-        GetCurrentData("Hanoi");
+        btn_xemthem.setEnabled(false);
+        ArrayAdapter arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,localtion);
+        view_search.setAdapter(arrayAdapter);
+        view_search.setThreshold(1);
+        view_search.addTextChangedListener(textWatcher);
+
         btn_search.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                String city=edit_search.getText().toString();//Input
+                String city=view_search.getText().toString();//Input
                 if(city.equals(""))
                 {
+                    btn_xemthem.setEnabled(false);
                     City="Hanoi";
                     GetCurrentData(City);
+
                 }
                 else
                 {
@@ -94,10 +137,7 @@ public class FirstActivity extends AppCompatActivity {
         btn_xemthem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String city=edit_search.getText().toString();
-
-
-
+                String city=view_search.getText().toString();
                 if(city.equals(""))
                 {
                     City="Hanoi";
@@ -223,6 +263,7 @@ public class FirstActivity extends AppCompatActivity {
                     Date dateSet=new Date(set*1000L);
                     String SunSet=simpleDateFormat1.format(dateSet);
 
+                    city_name=city;
                     fells_like=fells_temp;
                     pressure=pressu;
                     wind=speed;
@@ -243,7 +284,9 @@ public class FirstActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-
+                String text="NOT FOND YOUR CITY, PLEASE TRY ANOTHER CITY";
+                view_search.setText("");
+                Toast.makeText(FirstActivity.this, text,Toast.LENGTH_LONG).show();
             }
         });
         requestQueue.add(stringRequest);

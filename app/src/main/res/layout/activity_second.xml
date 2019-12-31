@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/cloud">
+    android:background="@drawable/after_noon">
 
     <ImageButton
         android:id="@+id/btn_back"
@@ -17,7 +17,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text="Biên Hòa"
+        android:textColor="#FFFFFF"
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
         android:textSize="25dp">
@@ -26,8 +26,7 @@
         android:id="@+id/textview_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Nắng nóng "
+        android:textColor="#FFFFFF"
         android:layout_marginTop="2dp"
         android:layout_gravity="center"
         android:textSize="15dp">
@@ -37,7 +36,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textStyle="bold"
-        android:text="28°C"
         android:textColor="#FF0000"
         android:layout_marginTop="5dp"
         android:layout_gravity="center"
@@ -54,7 +52,7 @@
             android:id="@+id/textview_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Thứ 7"
+            android:textColor="#FFFFFF"
             android:textSize="15dp"
             android:layout_weight="1"
 
@@ -64,7 +62,7 @@
             android:id="@+id/textview_status_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hôm nay"
+            android:textColor="#FFFFFF"
             android:textSize="15dp"
             android:layout_weight="1">
         </TextView>
@@ -72,7 +70,7 @@
             android:id="@+id/textview_maxtemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Max : 33°C"
+            android:textColor="#FFFFFF"
             android:textSize="15dp"
             android:layout_weight="1">
         </TextView>
@@ -81,7 +79,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:text="Min : 27°C"
+            android:textColor="#FFFFFF"
             android:textSize="15dp"
             android:layout_weight="1">
         </TextView>
@@ -124,6 +122,7 @@
                 android:layout_height="wrap_content"
                 android:text="Hôm nay: hiện tại, có mây vài nơi, nhiệt độ cao nhất 33°, đêm nay có mây vài nơi nhiệt độ thấp nhất 22°"
                 android:textSize="20dp">
+                android:textColor="#FFFFFF"
             </TextView>
 
             <TextView
@@ -142,16 +141,14 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:text="MT mọc"
+                    android:textColor="#FFFFFF"
                     android:textSize="15dp"
                     android:layout_weight="1"></TextView>
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:text="MT lặn"
+                    android:textColor="#FFFFFF"
                     android:textSize="15dp"
                     android:layout_weight="1"></TextView>
             </LinearLayout>
@@ -165,14 +162,14 @@
                     android:id="@+id/textview_sunrise"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="06:06"
+                    android:textColor="#FFFFFF"
                     android:textSize="25dp"
                     android:layout_weight="1"></TextView>
                 <TextView
                     android:id="@+id/textview_sunset"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="17:35"
+                    android:textColor="#FFFFFF"
                     android:textSize="25dp"
                     android:layout_weight="1"></TextView>
             </LinearLayout>
@@ -191,16 +188,14 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:text="Áp suất"
+                    android:textColor="#FFFFFF"
                     android:textSize="15dp"
                     android:layout_weight="1"></TextView>
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:text="Độ ẩm"
+                    android:textColor="#FFFFFF"
                     android:textSize="15dp"
                     android:layout_weight="1"></TextView>
             </LinearLayout>
@@ -214,14 +209,14 @@
                     android:id="@+id/textview_pressure"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="1009hPa"
+                    android:textColor="#FFFFFF"
                     android:textSize="25dp"
                     android:layout_weight="1"></TextView>
                 <TextView
                     android:id="@+id/textview_humidity"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="49%"
+                    android:textColor="#FFFFFF"
                     android:textSize="25dp"
                     android:layout_weight="1"></TextView>
             </LinearLayout>
@@ -240,16 +235,14 @@
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:text="Gió"
+                    android:textColor="#FFFFFF"
                     android:textSize="15dp"
                     android:layout_weight="1"></TextView>
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textStyle="bold"
-                    android:text="Nhiệt độ cảm nhận"
+                    android:textColor="#FFFFFF"
                     android:textSize="15dp"
                     android:layout_weight="1"></TextView>
             </LinearLayout>
@@ -263,7 +256,7 @@
                     android:id="@+id/textview_wind"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:text="3km/h"
+                    android:textColor="#FFFFFF"
                     android:textSize="25dp"
                     android:layout_weight="1"></TextView>
 
@@ -272,7 +265,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:text="36°C"
+                    android:textColor="#FFFFFF"
                     android:textSize="25dp"></TextView>
             </LinearLayout>
 
