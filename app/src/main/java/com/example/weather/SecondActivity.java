@@ -1,4 +1,5 @@
 package com.example.weather;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -6,6 +7,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -31,7 +34,19 @@ import java.util.Date;
 
 public class SecondActivity extends AppCompatActivity {
 
+    String[] URL ={"https://dataimage.000webhostapp.com/image/after_noon.png",
+            "https://dataimage.000webhostapp.com/image/clouds.png",
+            "https://dataimage.000webhostapp.com/image/night.png",
+            "https://dataimage.000webhostapp.com/image/pieace.jpeg",
+            "https://dataimage.000webhostapp.com/image/rain.png",
+            "https://dataimage.000webhostapp.com/image/storm.png",
+            "https://dataimage.000webhostapp.com/image/cloud.png",
+            "https://dataimage.000webhostapp.com/image/city.jpg",
+            "https://dataimage.000webhostapp.com/image/snow.jpg"};
+
     ImageButton btn_back;
+
+    LinearLayout background_activity2;
 
     TextView txtview_name;
     TextView txtmin;
@@ -61,6 +76,7 @@ public class SecondActivity extends AppCompatActivity {
         customAdapter=new CustomAdapter(SecondActivity.this,weatherArrayList);
         listView.setAdapter(customAdapter);
 
+       background_activity2=findViewById(R.id.background_activity2);
         txtview_name=findViewById(R.id.textview_name);//xong
         txtmin=findViewById(R.id.textview_mintemp);
         txtmax=findViewById(R.id.textview_maxtemp);
@@ -161,8 +177,83 @@ public class SecondActivity extends AppCompatActivity {
         Intent intent=getIntent();
 
         String des=intent.getStringExtra("des");
-        txtview_status.setText(des);
+         txtview_status.setText(des);
+
         Log.d("des:",des);
+
+
+     /*   if(des.compareToIgnoreCase("Thunderstorm")==0)
+        {
+            try {
+                Picasso.get().load(URL[5]).into(background_activity2);
+
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        else if(des.compareToIgnoreCase("Drizzle")==0)
+        {
+            try {
+                Picasso.get().load(URL[4]).into(background_activity2);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        else if(des.compareToIgnoreCase("Rain")==0)
+        {
+            try {
+                Picasso.get().load(URL[4]).into(background_activity2);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        else if(des.compareToIgnoreCase("Snow")==0)
+        {
+            try {
+                Picasso.get().load(URL[8]).into(background_activity2);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        else if(des.compareToIgnoreCase("Clear")==0)
+        {
+            try {
+                Picasso.get().load(URL[0]).into(background_activity2);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        else if(des.compareToIgnoreCase("Clouds")==0)
+        {
+            try {
+                Picasso.get().load(URL[1]).into(background_activity2);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }
+        else
+        {
+            try {
+                Picasso.get().load(URL[2]).into(background_activity2);
+            }
+            catch (Exception e)
+            {
+
+            }
+        }*/
+
         String temp=intent.getStringExtra("temp");
         txtview_temp.setText(temp+"°C");
         Log.d("temp:",temp);

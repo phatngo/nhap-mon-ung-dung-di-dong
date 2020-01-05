@@ -3,7 +3,6 @@ package com.example.weather;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,9 +14,7 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,8 +30,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -42,12 +39,24 @@ public class FirstActivity extends AppCompatActivity {
 
     String City;
 
+    String[] URL ={"https://dataimage.000webhostapp.com/image/after_noon.png",
+            "https://dataimage.000webhostapp.com/image/clouds.png",
+            "https://dataimage.000webhostapp.com/image/night.png",
+            "https://dataimage.000webhostapp.com/image/pieace.jpeg",
+            "https://dataimage.000webhostapp.com/image/rain.png",
+            "https://dataimage.000webhostapp.com/image/storm.png",
+            "https://dataimage.000webhostapp.com/image/cloud.png",
+            "https://dataimage.000webhostapp.com/image/city.jpg",
+            "https://dataimage.000webhostapp.com/image/snow.jpg"};
+
+    ImageView background_Activity1;
 
     TextView view_city;
     TextView view_temp;
     TextView view_mains;
 
     ImageView view_weather;
+    ImageView icon;
     AutoCompleteTextView view_search;
     Button btn_search;
     Button btn_xemthem;
@@ -57,7 +66,9 @@ public class FirstActivity extends AppCompatActivity {
     private String[] localtion={"An Giang"," Vũng Tàu","  Bạc Liêu","Bắc Kạn"," Bắc Giang","Bắc Ninh","Bến Tre","Bình Dương","Bình Định",
             "Bình Phước","Bình Thuận","Cà Mau","Cao Bằng","Cần Thơ","Đà Nẵng","Đắk Lắk","Đắk Nông","Đồng Nai","Đồng Tháp",
             "Điện Biên","Gia Lai","Hà Nam","Hà Nội","Hà Tĩnh","Hải Dương","Hải Phòng","Hòa Bình","Hậu Giang","Hứng Yên","Saigon",
-            "Khánh Hòa","Kiên Giang"};
+            "Khánh Hòa","Kiên Giang,Bien Hoa"};
+
+
 
     private void Anhxa()
     {
@@ -65,13 +76,16 @@ public class FirstActivity extends AppCompatActivity {
         view_temp=findViewById(R.id.txt_temp);
         view_mains=findViewById(R.id.txt_desc);
         view_search=findViewById(R.id.view_search);
-
+        icon=findViewById(R.id.imageView);
 
         view_weather=findViewById(R.id.img_weather);
         btn_search=findViewById(R.id.btn_search);
         btn_xemthem=findViewById(R.id.btn_xemthem);
 
+        background_Activity1=findViewById(R.id.ac1);
+
     }
+
 
 
     //visible btn_xemthem
@@ -109,6 +123,17 @@ public class FirstActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first);
         Anhxa();
+
+
+        try {
+            Picasso.get().load("https://dataimage.000webhostapp.com/image/pieace.jpeg").into(background_Activity1);
+            Picasso.get().load(URL[7]).placeholder(R.drawable.town).error(R.drawable.town).into(icon);
+        }
+        catch (Exception e)
+        {
+
+        }
+
         btn_xemthem.setEnabled(false);
         ArrayAdapter arrayAdapter=new ArrayAdapter(this,android.R.layout.simple_list_item_1,localtion);
         view_search.setAdapter(arrayAdapter);
@@ -182,14 +207,16 @@ public class FirstActivity extends AppCompatActivity {
             }
         });
     }
+
+
     public void GetCurrentData(String city)
 
     {
         //requestQueue thực thi những request gửi đi
         RequestQueue requestQueue= Volley.newRequestQueue(FirstActivity.this);
         //đọc dữ liệu đường dẫn
-        String URL="https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid=6eb05489697e40534a222fae7558853f";
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
+        String URL1="https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid=6eb05489697e40534a222fae7558853f";
+        StringRequest stringRequest=new StringRequest(Request.Method.GET, URL1, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
@@ -206,6 +233,80 @@ public class FirstActivity extends AppCompatActivity {
                     String mains=jsonObjectWeather.getString("main");//thông tin thời tiết
                     Picasso.get().load("http://openweathermap.org/img/wn/"+icon+".png").into(view_weather);
                     view_mains.setText(mains);
+
+
+                    if(mains.compareToIgnoreCase("Thunderstorm")==0)
+                    {
+                        try {
+                            Picasso.get().load(URL[5]).into(background_Activity1);
+
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                    else if(mains.compareToIgnoreCase("Drizzle")==0)
+                    {
+                        try {
+                            Picasso.get().load(URL[4]).into(background_Activity1);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                    else if(mains.compareToIgnoreCase("Rain")==0)
+                    {
+                        try {
+                            Picasso.get().load(URL[4]).into(background_Activity1);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                    else if(mains.compareToIgnoreCase("Snow")==0)
+                    {
+                        try {
+                            Picasso.get().load(URL[8]).into(background_Activity1);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                    else if(mains.compareToIgnoreCase("Clear")==0)
+                    {
+                        try {
+                            Picasso.get().load(URL[0]).into(background_Activity1);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                    else if(mains.compareToIgnoreCase("Clouds")==0)
+                    {
+                        try {
+                            Picasso.get().load(URL[1]).into(background_Activity1);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+                    else
+                    {
+                        try {
+                            Picasso.get().load(URL[2]).into(background_Activity1);
+                        }
+                        catch (Exception e)
+                        {
+
+                        }
+                    }
+
 
                     //khối main
                     JSONObject jsonObjectMain=jsonObject.getJSONObject("main");
