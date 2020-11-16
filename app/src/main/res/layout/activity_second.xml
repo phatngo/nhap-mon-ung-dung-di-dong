@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    android:id="@+id/background_activity2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/background_activity2"
-    android:background="@drawable/cloud">
+    android:background="@drawable/after_noon"
+    android:orientation="vertical">
 
     <ImageButton
         android:id="@+id/btn_back"
@@ -14,85 +14,83 @@
 
     </ImageButton>
 
+    <TextView
+        android:id="@+id/textview_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textColor="#000000"
+        android:textSize="25dp"
+        android:textStyle="bold"></TextView>
+
+    <TextView
+        android:id="@+id/textview_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="2dp"
+        android:textColor="#000000"
+        android:textSize="15dp"></TextView>
+
+    <TextView
+        android:id="@+id/textview_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="5dp"
+        android:textColor="#FFEB3B"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"></TextView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:orientation="horizontal"
+        android:weightSum="4">
+
         <TextView
-            android:id="@+id/textview_name"
+            android:id="@+id/textview_day"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
+            android:layout_weight="1"
             android:textColor="#000000"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center"
-            android:textSize="25dp">
-        </TextView>
+            android:textSize="15dp"
+
+            ></TextView>
+
         <TextView
-            android:id="@+id/textview_status"
+            android:id="@+id/textview_status_day"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:textColor="#000000"
-            android:layout_marginTop="2dp"
-            android:layout_gravity="center"
-            android:textSize="15dp">
-        </TextView>
+            android:textSize="15dp"></TextView>
+
         <TextView
-            android:id="@+id/textview_temp"
+            android:id="@+id/textview_maxtemp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textStyle="bold"
-            android:textColor="#FF0000"
-            android:layout_marginTop="5dp"
-            android:layout_gravity="center"
-            android:textSize="30dp">
-        </TextView>
-        <LinearLayout
-            android:layout_width="match_parent"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="15dp"></TextView>
+
+        <TextView
+            android:id="@+id/textview_mintemp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:weightSum="4"
-            android:layout_marginBottom="10dp">
-
-            <TextView
-                android:id="@+id/textview_day"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_weight="1"
-
-                >
-            </TextView>
-
-            <TextView
-                android:id="@+id/textview_status_day"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:textColor="#000000"
-                android:textSize="15dp"></TextView>
-            <TextView
-                android:id="@+id/textview_maxtemp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_weight="1">
-            </TextView>
-            <TextView
-                android:id="@+id/textview_mintemp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:textColor="#000000"
-                android:textSize="15dp"
-                android:layout_weight="1">
-            </TextView>
-        </LinearLayout>
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:textColor="#000000"
+            android:textSize="15dp"></TextView>
+    </LinearLayout>
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/line">
-    </TextView>
+        android:background="@drawable/line"></TextView>
 
     <ListView
         android:id="@+id/listview"
@@ -108,14 +106,13 @@
 
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:nestedScrollingEnabled="true">
+            android:nestedScrollingEnabled="true"
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/line">
-            </TextView>
+                android:background="@drawable/line"></TextView>
 
             <TextView
                 android:id="@+id/txtview_description"
@@ -123,149 +120,157 @@
                 android:layout_height="wrap_content"
                 android:text="Hôm nay: hiện tại, có mây vài nơi, nhiệt độ cao nhất 33°, đêm nay có mây vài nơi nhiệt độ thấp nhất 22°"
                 android:textSize="20dp">
-                android:textColor="#000000"
-            </TextView>
+                android:textColor="#000000"</TextView>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/line">
-            </TextView>
+                android:background="@drawable/line"></TextView>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
                 android:orientation="horizontal"
-                >
+                android:weightSum="2">
+
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="#000000"
-                    android:textSize="15dp"
+                    android:layout_weight="1"
                     android:text="Sun Rise"
-                    android:layout_weight="1"></TextView>
+                    android:textColor="#000000"
+                    android:textSize="15dp"></TextView>
+
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="#000000"
+                    android:layout_weight="1"
                     android:text="Sun Set"
-                    android:textSize="15dp"
-                    android:layout_weight="1"></TextView>
+                    android:textColor="#000000"
+                    android:textSize="15dp"></TextView>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
                 android:orientation="horizontal"
-                >
+                android:weightSum="2">
+
                 <TextView
                     android:id="@+id/textview_sunrise"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:textColor="#000000"
-                    android:textSize="25dp"
-                    android:layout_weight="1"></TextView>
+                    android:textSize="25dp"></TextView>
+
                 <TextView
                     android:id="@+id/textview_sunset"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:textColor="#000000"
-                    android:textSize="25dp"
-                    android:layout_weight="1"></TextView>
+                    android:textSize="25dp"></TextView>
             </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/line">
-            </TextView>
+                android:background="@drawable/line"></TextView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
                 android:orientation="horizontal"
-                >
+                android:weightSum="2">
+
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="#000000"
+                    android:layout_weight="1"
                     android:text="Pressure"
-                    android:textSize="15dp"
-                    android:layout_weight="1"></TextView>
+                    android:textColor="#000000"
+                    android:textSize="15dp"></TextView>
+
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="#000000"
+                    android:layout_weight="1"
                     android:text="Humidity"
-                    android:textSize="15dp"
-                    android:layout_weight="1"></TextView>
+                    android:textColor="#000000"
+                    android:textSize="15dp"></TextView>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
                 android:orientation="horizontal"
-                >
+                android:weightSum="2">
+
                 <TextView
                     android:id="@+id/textview_pressure"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:textColor="#000000"
-                    android:textSize="25dp"
-                    android:layout_weight="1"></TextView>
+                    android:textSize="25dp"></TextView>
+
                 <TextView
                     android:id="@+id/textview_humidity"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:textColor="#000000"
-                    android:textSize="25dp"
-                    android:layout_weight="1"></TextView>
+                    android:textSize="25dp"></TextView>
             </LinearLayout>
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/line">
-            </TextView>
+                android:background="@drawable/line"></TextView>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
                 android:orientation="horizontal"
-                >
+                android:weightSum="2">
+
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:textColor="#000000"
+                    android:layout_weight="1"
                     android:text="Wind"
-                    android:textSize="15dp"
-                    android:layout_weight="1"></TextView>
+                    android:textColor="#000000"
+                    android:textSize="15dp"></TextView>
+
                 <TextView
 
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Feels Like"
                     android:textColor="#000000"
-                    android:text="Fells like"
-                    android:textSize="15dp"
-                    android:layout_weight="1"></TextView>
+                    android:textSize="15dp"></TextView>
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2"
                 android:orientation="horizontal"
-                >
+                android:weightSum="2">
+
                 <TextView
                     android:id="@+id/textview_wind"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_weight="1"
                     android:textColor="#000000"
-                    android:textSize="25dp"
-                    android:layout_weight="1"></TextView>
+                    android:textSize="25dp"></TextView>
 
                 <TextView
                     android:id="@+id/textview_fell_temp"

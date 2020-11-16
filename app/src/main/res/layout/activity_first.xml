@@ -10,13 +10,15 @@
        android:id="@+id/imageView"
        android:layout_width="80dp"
        android:layout_height="80dp"
-       android:layout_marginBottom="75dp"
-       android:background="@drawable/town"
+       android:layout_marginBottom="120dp"
        android:elevation="5dp"
        android:scaleType="fitXY"
        app:layout_constraintBottom_toBottomOf="@+id/cardview"
        app:layout_constraintEnd_toEndOf="parent"
-       app:layout_constraintStart_toStartOf="parent" />
+       app:layout_constraintHorizontal_bias="0.498"
+       app:layout_constraintStart_toStartOf="parent"
+       app:srcCompat="@drawable/wheather"
+       tools:srcCompat="@drawable/wheather" />
 
    <View
 
@@ -26,7 +28,7 @@
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintHorizontal_bias="0.0"
        app:layout_constraintStart_toStartOf="parent"
-       app:layout_constraintTop_toTopOf="parent" >
+       app:layout_constraintTop_toTopOf="parent">
 
    </View>
 
@@ -85,13 +87,6 @@
 
              android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
 
-         <ImageView
-             android:id="@+id/img_weather"
-             android:layout_width="100dp"
-             android:layout_height="100dp"
-             android:background="@null"
-             android:scaleType="fitXY" />
-
          <TextView
              android:id="@+id/txt_temp"
              android:layout_width="wrap_content"
@@ -104,20 +99,22 @@
              android:layout_width="wrap_content"
              android:layout_height="wrap_content"
              android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
-<LinearLayout
+
+         <Button
+             android:id="@+id/btn_xemthem"
+             android:layout_width="65dp"
+             android:layout_height="wrap_content"
+             android:background="@android:drawable/ic_menu_directions"
+             android:backgroundTint="@null"
+             android:gravity="right"></Button>
+
+         <LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:layout_gravity="right">
 
-   <Button
-       android:id="@+id/btn_xemthem"
-       android:layout_width="50dp"
-       android:layout_height="wrap_content"
-       android:background="@drawable/right_chevron"
-       android:backgroundTint="@null"
-       android:gravity="right"></Button>
-</LinearLayout>
+         </LinearLayout>
 
 
       </LinearLayout>
@@ -128,7 +125,7 @@
        android:layout_width="50dp"
        android:layout_height="50dp"
        android:layout_marginEnd="52dp"
-       android:background="@drawable/loupe"
+       android:background="?android:attr/actionModeFindDrawable"
        app:layout_constraintBottom_toBottomOf="@+id/cardview"
        app:layout_constraintEnd_toEndOf="parent"
        app:layout_constraintHorizontal_bias="1.0"

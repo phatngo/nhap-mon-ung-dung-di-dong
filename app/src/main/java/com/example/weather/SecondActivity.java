@@ -1,33 +1,28 @@
 package com.example.weather;
-import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.Response.ErrorListener;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
-import com.squareup.picasso.Picasso;
-
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -64,6 +59,7 @@ public class SecondActivity extends AppCompatActivity {
     TextView txtview_humidity;
     TextView txtview_wind;
     TextView fells_like;
+    ProgressDialog progressDialog;
 
     ArrayList<Weather> weatherArrayList;
     ListView listView;
@@ -73,7 +69,7 @@ public class SecondActivity extends AppCompatActivity {
 
         listView=(ListView)findViewById(R.id.listview);
         weatherArrayList=new ArrayList<Weather>();
-        customAdapter=new CustomAdapter(SecondActivity.this,weatherArrayList);
+        customAdapter=new CustomAdapter(SecondActivity.this,R.layout.list_days,weatherArrayList);
         listView.setAdapter(customAdapter);
 
        background_activity2=findViewById(R.id.background_activity2);
@@ -97,76 +93,12 @@ public class SecondActivity extends AppCompatActivity {
 
         btn_back=findViewById(R.id.btn_back);
 
-    }
-
-    private void Get5days(String city){
-
-        String URL="http://api.openweathermap.org/data/2.5/forecast?q="+city+"&units=metric&cnt=40&appid=6eb05489697e40534a222fae7558853f";//5d
-        RequestQueue requestQueue= Volley.newRequestQueue(SecondActivity.this);
-        StringRequest stringRequest= new StringRequest(Request.Method.GET, URL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Log.d("Kết quả JSON",response);
-                    JSONObject jsonObject=new JSONObject(response);
-                    JSONObject jsonObjectCity=jsonObject.getJSONObject("city");
-                    String city=jsonObjectCity.getString("name");
-                    txtview_name.setText(city);
-                    Log.d("city",city);
-
-                    JSONArray jsonArrayList=jsonObject.getJSONArray("list");
-                    for(int i=0;i<jsonArrayList.length();i++)
-                    {
-                        JSONObject jsonObjectList=jsonArrayList.getJSONObject(i);//duyệt tới cuối mảng
-
-                        //ngày
-                        String day=jsonObjectList.getString("dt");//i=1
-                        //ép kiểu
-                        Long l= Long.valueOf(day);
-                        Date date=new Date(l*1000L);
-                        SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE");
-                        String Day= simpleDateFormat.format(date);//ngày
-                        Log.d("Ngày",Day);
-                        //nhiệt độ,
-                        JSONObject jsonObjectMain=jsonObjectList.getJSONObject("main");
-                        // nhiệt độ max
-                        String max=jsonObjectMain.getString("temp_max");
-                        Double a=Double.valueOf(max);
-                        String maxtemp=String.valueOf(a.intValue());//maxtemp
-                        //nhiệt độ min
-                        String min=jsonObjectMain.getString("temp_min");
-                        Double b=Double.valueOf(min);
-                        String mintemp=String.valueOf(b.intValue());//mintemp
-
-                        JSONArray jsonArrayWeather=jsonObjectList.getJSONArray("weather");
-                        JSONObject jsonObjectWeather=jsonArrayWeather.getJSONObject(0);
-                        String description=jsonObjectWeather.getString("description");
-                        String icon=jsonObjectWeather.getString("icon");
-
-                        Log.d("max",maxtemp);
-                        Log.d("min",mintemp);
-                        Log.d("description",description);
-                        Log.d("icon",icon);
-
-
-                        weatherArrayList.add(new Weather(Day,description,icon,mintemp,maxtemp));
-                    }
-                    customAdapter.notifyDataSetChanged();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-
-            }
-        });
-
-        requestQueue.add(stringRequest);
+        progressDialog=new ProgressDialog(SecondActivity.this);
+        progressDialog.setTitle("Notification");
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage("Processing...");
 
     }
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,102 +108,36 @@ public class SecondActivity extends AppCompatActivity {
         Anhxa();
         Intent intent=getIntent();
 
-        String des=intent.getStringExtra("des");
-         txtview_status.setText(des);
 
-        Log.d("des:",des);
-
-
-     /*   if(des.compareToIgnoreCase("Thunderstorm")==0)
-        {
-            try {
-                Picasso.get().load(URL[5]).into(background_activity2);
-
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        else if(des.compareToIgnoreCase("Drizzle")==0)
-        {
-            try {
-                Picasso.get().load(URL[4]).into(background_activity2);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        else if(des.compareToIgnoreCase("Rain")==0)
-        {
-            try {
-                Picasso.get().load(URL[4]).into(background_activity2);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        else if(des.compareToIgnoreCase("Snow")==0)
-        {
-            try {
-                Picasso.get().load(URL[8]).into(background_activity2);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        else if(des.compareToIgnoreCase("Clear")==0)
-        {
-            try {
-                Picasso.get().load(URL[0]).into(background_activity2);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        else if(des.compareToIgnoreCase("Clouds")==0)
-        {
-            try {
-                Picasso.get().load(URL[1]).into(background_activity2);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }
-        else
-        {
-            try {
-                Picasso.get().load(URL[2]).into(background_activity2);
-            }
-            catch (Exception e)
-            {
-
-            }
-        }*/
-
+        String name=intent.getStringExtra("name");
+        txtview_name.setText(name);
         String temp=intent.getStringExtra("temp");
         txtview_temp.setText(temp+"°C");
         Log.d("temp:",temp);
         String d=intent.getStringExtra("day");
-        txtview_day.setText(d);
+        long unixSeconds=Long.parseLong(d);
+        Date date = new java.util.Date(unixSeconds*1000L);
+// the format of your date
+        SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy");
+// give a timezone reference for formatting (see comment at the bottom)
+        sdf.setTimeZone(java.util.TimeZone.getTimeZone("GMT-4"));
+        String formattedDate = sdf.format(date);
+
+        txtview_day.setText(formattedDate);
         Log.d("day:",d);
-        String days=intent.getStringExtra("days");
-        txtview_status_day.setText(days);
-        Log.d("days:",days);
         String tempmin=intent.getStringExtra("tempmin");
         txtmin.setText(tempmin+"°C");
         Log.d("tempmin:",tempmin);
         String tempmax=intent.getStringExtra("tempmax");
         txtmax.setText(tempmax+"°C");
         String sunset=intent.getStringExtra("sunset");
-        txtview_sunset.setText(sunset);
-        String sunsire= intent.getStringExtra("sunrise");
-        txtview_sunrise.setText(sunsire);
+        double sunsett=Double.parseDouble(sunset);
+        sunsett=Math.round((sunsett*100)/100);
+        txtview_sunset.setText(sunsett+"");
+        String sunrise= intent.getStringExtra("sunrise");
+        double sunrises=Double.parseDouble(sunrise);
+        sunrises=Math.round((sunrises*100)/100);
+        txtview_sunrise.setText(sunrises+"");
         String pressure= intent.getStringExtra("pressure");
         txtview_pressure.setText(pressure+"hPA");
         String humidity=intent.getStringExtra("humidity");
@@ -281,11 +147,16 @@ public class SecondActivity extends AppCompatActivity {
         String fell=intent.getStringExtra("fells_like");
         fells_like.setText(fell+"°C");
 
+        String lat=intent.getStringExtra("lat");
+        String lon=intent.getStringExtra("lon");
+        String dt = intent.getStringExtra("dt");
+
         txtview_descrip.setText("Today: The weather have maximun temp "+tempmax+"°C minimun temp "+tempmin+"°C");
 
-        String city= intent.getStringExtra("name");
-        Log.d("City",city);
-        Get5days(city);
+        String city = intent.getStringExtra("name");
+        Log.d("city", city );
+        get5DaysTask Get5DaysTasks=new get5DaysTask();
+        Get5DaysTasks.execute(city);
 
 
         btn_back.setOnClickListener(new View.OnClickListener() {
@@ -299,5 +170,90 @@ public class SecondActivity extends AppCompatActivity {
 
 
 
+class get5DaysTask extends AsyncTask<String, Void, ArrayList<Weather>>{
 
+    @Override
+    protected ArrayList<Weather> doInBackground(String... strings) {
+        ArrayList<Weather>weatherArray=new ArrayList<>();
+        try{
+            URL url= new URL("https://api.openweathermap.org/data/2.5/forecast?q="+strings[0]+"&appid=a839789a1e16df061980a3c9966950da");
+            HttpURLConnection connection= (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Content-type", "application/json; charset=utf-8");
+            connection.setRequestProperty("User-Agent","Mozilla/5.0 ( compatible ) ");
+            connection.setRequestProperty("Accept", "*/*");
+            InputStream is= connection.getInputStream();
+            InputStreamReader isr=new InputStreamReader(is,"UTF-8");
+            BufferedReader br=new BufferedReader(isr);
+            String line=br.readLine();
+            StringBuilder builder=new StringBuilder();
+            while (line!=null){
+                builder.append(line);
+                line=br.readLine();}
+            String json=builder.toString();
+            JSONObject jsonObject=new JSONObject(json);
+            JSONArray list = jsonObject.getJSONArray("list");
+
+            for(int i=0;i<list.length();i++){
+                JSONObject object=list.getJSONObject(i);
+                //ngày
+                //ép kiểu
+
+                Long l= object.getLong("dt");
+                Date date=new Date(l*1000L);
+                SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE");
+                String Day= simpleDateFormat.format(date);//ngày
+                Log.d("Ngày",Day);
+
+                //nhiệt độ,
+                JSONObject jsonObjectMain=object.getJSONObject("main");
+                // nhiệt độ max
+                String max=jsonObjectMain.getString("temp_max");
+                Double a=Double.valueOf(max);
+                String maxtemp=String.valueOf(a.intValue());//maxtemp
+                //nhiệt độ min
+                String min=jsonObjectMain.getString("temp_min");
+                Double b=Double.valueOf(min);
+                String mintemp=String.valueOf(b.intValue());//mintemp
+
+                JSONArray jsonArrayWeather=object.getJSONArray("weather");
+                JSONObject jsonObjectWeather=jsonArrayWeather.getJSONObject(0);
+                String description=jsonObjectWeather.getString("description");
+                String icon=jsonObjectWeather.getString("icon");
+                int flag=0;
+                for(int j=0;j<weatherArray.size();j++){
+                    if(weatherArray.get(j).getDay().equals(Day)){
+                        flag=1;
+                    }
+                }
+                if(flag==0){
+                weatherArray.add(new Weather(Day,mintemp,maxtemp,description,icon));
+                }
+                flag=0;
+            }
+            return weatherArray;
+        }catch (Exception e){
+            Log.e("Retrieve Data Failed",e.toString() );
+        }
+        return null;
+    }
+
+    @Override
+    protected void onPostExecute(ArrayList<Weather> weathers) {
+        if(weathers.size()==0){
+            Toast.makeText(SecondActivity.this,"No Data Found!",Toast.LENGTH_SHORT).show();
+        }else{
+        super.onPostExecute(weathers);
+        customAdapter.clear();
+        customAdapter.addAll(weathers);
+        progressDialog.dismiss();}
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        customAdapter.clear();
+        progressDialog.show();
+    }
+}
 }

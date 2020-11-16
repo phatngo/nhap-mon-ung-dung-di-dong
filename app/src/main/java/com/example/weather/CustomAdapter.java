@@ -1,36 +1,45 @@
 package com.example.weather;
+import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CustomAdapter extends BaseAdapter {
+public class CustomAdapter extends ArrayAdapter {
 
-    Context context;//người dùng truyền vào
-    ArrayList<Weather> arrayList;
+    Activity context;
+    int resource;
+    List<Weather> objects;
 
-    public CustomAdapter(Context context,ArrayList<Weather> arrayList)
+    public CustomAdapter(@NonNull Activity context, int resource, @NonNull List objects)
     {
+        super(context,resource,objects);
         this.context=context;
-        this.arrayList=arrayList;
+        this.resource=resource;
+        this.objects=objects;
     }
 
     @Override
     public int getCount() {
-        return arrayList.size();
+        return objects.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return arrayList.get(position);
+        return objects.get(position);
     }
 
     @Override
@@ -39,24 +48,22 @@ public class CustomAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        LayoutInflater inflater= (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        convertView  =inflater.inflate(R.layout.list_days,null);
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        LayoutInflater inflater= this.context.getLayoutInflater();
+        View row  = inflater.inflate(this.resource,null);
 
-        Weather weather=arrayList.get(position);
+        Weather weather=objects.get(position);
 
-        TextView txt_days= convertView.findViewById(R.id.txt_days);
-        TextView txtview_mintemp= convertView.findViewById(R.id.txtview_mintemp);
-        TextView txtview_maxtemp= convertView.findViewById(R.id.txtview_maxtemp);
-        ImageView img_days=convertView.findViewById(R.id.img_days);
+        TextView txt_days= row.findViewById(R.id.txt_days);
+        TextView txtview_mintemp = row.findViewById(R.id.txtview_mintemp);
+        TextView txtview_maxtemp= row.findViewById(R.id.txtview_maxtemp);
 
-        txt_days.setText(weather.day);
-        txtview_mintemp.setText(weather.MinTemp+"°C");
-        txtview_maxtemp.setText(weather.MaxTemp+"°C");
-        Picasso.get().load("http://openweathermap.org/img/wn/"+weather.IMG+".png").into(img_days);
+        double mintemp=Double.parseDouble(weather.getTempmin())-273.15;
+        double maxtemp=Double.parseDouble(weather.getTempmax())-273.15;
+        txt_days.setText(weather.getDay());
+        txtview_mintemp.setText(Math.round((mintemp*10)/10)+"°C");
+        txtview_maxtemp.setText(Math.round((maxtemp*10)/10)+"°C");
 
-        Log.d("CustomAdapter getView()",String.valueOf(position));
-
-        return convertView;
+        return row;
     }
 }

@@ -1,9 +1,11 @@
 package com.example.weather;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
 import android.text.Editable;
@@ -31,6 +33,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -38,6 +45,7 @@ import java.util.Date;
 public class FirstActivity extends AppCompatActivity {
 
     String City;
+
 
     String[] URL ={"https://dataimage.000webhostapp.com/image/after_noon.png",
             "https://dataimage.000webhostapp.com/image/clouds.png",
@@ -60,8 +68,12 @@ public class FirstActivity extends AppCompatActivity {
     AutoCompleteTextView view_search;
     Button btn_search;
     Button btn_xemthem;
+    ImageView background_pic1;
+    AlertDialog.Builder alertDialog;
 
-    String main,temp,day,days,tempmin,tempmax,sunset,sunrise,pressure,humidity,wind,fells_like,city_name;
+
+    String main,temp,day,tempmin,tempmax,sunset,sunrise,pressure,humidity,wind,fells_like,lat, lon, dt;
+
 
     private String[] localtion={"An Giang"," Vũng Tàu","  Bạc Liêu","Bắc Kạn"," Bắc Giang","Bắc Ninh","Bến Tre","Bình Dương","Bình Định",
             "Bình Phước","Bình Thuận","Cà Mau","Cao Bằng","Cần Thơ","Đà Nẵng","Đắk Lắk","Đắk Nông","Đồng Nai","Đồng Tháp",
@@ -78,12 +90,13 @@ public class FirstActivity extends AppCompatActivity {
         view_search=findViewById(R.id.view_search);
         icon=findViewById(R.id.imageView);
 
-        view_weather=findViewById(R.id.img_weather);
         btn_search=findViewById(R.id.btn_search);
         btn_xemthem=findViewById(R.id.btn_xemthem);
 
         background_Activity1=findViewById(R.id.ac1);
-
+        background_pic1=findViewById(R.id.imageView);
+        btn_xemthem.setVisibility(View.INVISIBLE);
+        alertDialog=new AlertDialog.Builder(FirstActivity.this).setTitle("Notification").setMessage("Your city not found!");
     }
 
 
@@ -126,7 +139,10 @@ public class FirstActivity extends AppCompatActivity {
 
 
         try {
-            Picasso.get().load("https://dataimage.000webhostapp.com/image/pieace.jpeg").into(background_Activity1);
+            Picasso.get().load("https://img.freepik.com/free-photo/room-with-concrete-floor-smoke-background_9083-2991.jpg?size=626&ext=jpg").into(background_Activity1);
+            Picasso.get().load(URL[7]).placeholder(R.drawable.town).error(R.drawable.town).into(icon);
+
+            Picasso.get().load("https://images.unsplash.com/photo-1579546929518-9e396f3cc809?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjExMDk0fQ&w=1000&q=80").into(background_pic1);
             Picasso.get().load(URL[7]).placeholder(R.drawable.town).error(R.drawable.town).into(icon);
         }
         catch (Exception e)
@@ -149,13 +165,15 @@ public class FirstActivity extends AppCompatActivity {
                 {
                     btn_xemthem.setEnabled(false);
                     City="Hanoi";
-                    GetCurrentData(City);
+                    getDataFromURLTask getDataFromURLTask=new getDataFromURLTask();
+                    getDataFromURLTask.execute(City);
 
                 }
                 else
                 {
                     City=city;
-                    GetCurrentData(City);
+                    getDataFromURLTask getDataFromURLTask=new getDataFromURLTask();
+                    getDataFromURLTask.execute(City);
                 }
             }
         });
@@ -167,10 +185,12 @@ public class FirstActivity extends AppCompatActivity {
                 {
                     City="Hanoi";
                     Intent intent=new Intent(FirstActivity.this,SecondActivity.class);
+                    intent.putExtra("name", city);
                     intent.putExtra("des",main);
+                    intent.putExtra("lat", lat);
+                    intent.putExtra("lon", lon);
                     intent.putExtra("temp",temp);
                     intent.putExtra("day",day);
-                    intent.putExtra("days",days);
                     intent.putExtra("tempmin",tempmin);
                     intent.putExtra("tempmax",tempmax);
                     intent.putExtra("sunset",sunset);
@@ -179,18 +199,18 @@ public class FirstActivity extends AppCompatActivity {
                     intent.putExtra("humidity",humidity);
                     intent.putExtra("wind",wind);
                     intent.putExtra("fells_like",fells_like);
-
-                    intent.putExtra("name",City);
+                    intent.putExtra("dt", dt);
                     startActivity(intent);
                 }
                 else
                 {
                     City=city;
                     Intent intent=new Intent(FirstActivity.this,SecondActivity.class);
-                    intent.putExtra("des",main);
+                    intent.putExtra("name", city);
                     intent.putExtra("temp",temp);
                     intent.putExtra("day",day);
-                    intent.putExtra("days",days);
+                    intent.putExtra("lat", lat);
+                    intent.putExtra("lon", lon);
                     intent.putExtra("tempmin",tempmin);
                     intent.putExtra("tempmax",tempmax);
                     intent.putExtra("sunset",sunset);
@@ -199,197 +219,117 @@ public class FirstActivity extends AppCompatActivity {
                     intent.putExtra("humidity",humidity);
                     intent.putExtra("wind",wind);
                     intent.putExtra("fells_like",fells_like);
-
-                    intent.putExtra("name",City);
+                    intent.putExtra("dt", dt);
                     startActivity(intent);
                 }
 
             }
         });
     }
+    class getDataFromURLTask extends AsyncTask<String, Void, Weather>{
+
+        @Override
+        protected Weather doInBackground(String... strings) {
+            try{
+                URL url=new URL("https://api.openweathermap.org/data/2.5/weather?q="+strings[0]+"&appid=a839789a1e16df061980a3c9966950da");
+                HttpURLConnection connection= (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setRequestProperty("Content-type", "application/json; charset=utf-8");
+                connection.setRequestProperty("User-Agent","Mozilla/5.0 ( compatible ) ");
+                connection.setRequestProperty("Accept", "*/*");
+                InputStream is= connection.getInputStream();
+                InputStreamReader isr=new InputStreamReader(is,"UTF-8");
+                BufferedReader br=new BufferedReader(isr);
+                String line=br.readLine();
+                StringBuilder builder=new StringBuilder();
+                while (line!=null){
+                    builder.append(line);
+                    line=br.readLine();}
+                String json=builder.toString();
+                JSONObject jsonObject=new JSONObject(json);
+
+                Log.d("0", String.valueOf(jsonObject));
 
 
-    public void GetCurrentData(String city)
+                JSONArray weatherArray = jsonObject.getJSONArray("weather");
+                JSONObject weather = weatherArray.getJSONObject(0);
+                String status = weather.getString("description");
+                Log.d("2", status);
 
-    {
-        //requestQueue thực thi những request gửi đi
-        RequestQueue requestQueue= Volley.newRequestQueue(FirstActivity.this);
-        //đọc dữ liệu đường dẫn
-        String URL1="https://api.openweathermap.org/data/2.5/weather?q="+city+"&units=metric&appid=6eb05489697e40534a222fae7558853f";
-        StringRequest stringRequest=new StringRequest(Request.Method.GET, URL1, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    Log.d("Kết quả JSON",response);
-                    JSONObject jsonObject=new JSONObject(response);
-                    //tên thành phố
-                    String city=jsonObject.getString("name");
-                    view_city.setText(city);
+                JSONObject main = jsonObject.getJSONObject("main");
+                double temp = main.getDouble("temp");
+                String tempmin = String.valueOf(main.getDouble("temp_min")-273.15);
+                String tempmax = String.valueOf(main.getDouble("temp_max")-273.15);
+                String pressure = String.valueOf(main.getInt("pressure"));
+                String humidity = String.valueOf(main.getInt("humidity"));
+                String fells_like = String.valueOf(main.getDouble("feels_like"));
 
-                    //khối weather
-                    JSONArray jsonArrayWeather=jsonObject.getJSONArray("weather");
-                    JSONObject jsonObjectWeather=jsonArrayWeather.getJSONObject(0);
-                    String icon=jsonObjectWeather.getString("icon");
-                    String mains=jsonObjectWeather.getString("main");//thông tin thời tiết
-                    Picasso.get().load("http://openweathermap.org/img/wn/"+icon+".png").into(view_weather);
-                    view_mains.setText(mains);
+                JSONObject sys = jsonObject.getJSONObject("sys");
+                String sunset = String.valueOf(sys.getLong("sunset")-273.15);
+                String sunrise = String.valueOf(sys.getLong("sunrise")-273.15);
+                Log.d("3", String.valueOf(temp));
 
+                JSONObject windObject = jsonObject.getJSONObject("wind");
+                String wind = String.valueOf(windObject.getDouble("speed"));
 
-                    if(mains.compareToIgnoreCase("Thunderstorm")==0)
-                    {
-                        try {
-                            Picasso.get().load(URL[5]).into(background_Activity1);
+                JSONObject coord = jsonObject.getJSONObject("coord");
 
-                        }
-                        catch (Exception e)
-                        {
+                String city = jsonObject.getString("name");
+                Log.d("4", String.valueOf(city));
 
-                        }
-                    }
-                    else if(mains.compareToIgnoreCase("Drizzle")==0)
-                    {
-                        try {
-                            Picasso.get().load(URL[4]).into(background_Activity1);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-                    else if(mains.compareToIgnoreCase("Rain")==0)
-                    {
-                        try {
-                            Picasso.get().load(URL[4]).into(background_Activity1);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-                    else if(mains.compareToIgnoreCase("Snow")==0)
-                    {
-                        try {
-                            Picasso.get().load(URL[8]).into(background_Activity1);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-                    else if(mains.compareToIgnoreCase("Clear")==0)
-                    {
-                        try {
-                            Picasso.get().load(URL[0]).into(background_Activity1);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-                    else if(mains.compareToIgnoreCase("Clouds")==0)
-                    {
-                        try {
-                            Picasso.get().load(URL[1]).into(background_Activity1);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-                    else
-                    {
-                        try {
-                            Picasso.get().load(URL[2]).into(background_Activity1);
-                        }
-                        catch (Exception e)
-                        {
-
-                        }
-                    }
-
-
-                    //khối main
-                    JSONObject jsonObjectMain=jsonObject.getJSONObject("main");
-                    String as=jsonObjectMain.getString("temp");
-                    Double a=Double.valueOf(as);
-                    String temper=String.valueOf(a.intValue());
-                    view_temp.setText(temper+"°C");
-
-                    String min = jsonObjectMain.getString("temp_min");
-                    Double mina = Double.valueOf(min);
-                    String min_ = String.valueOf(mina.intValue());
-
-                    Log.d("Nhiệt độ nhỏ nhất ",min);
-                    String max = jsonObjectMain.getString("temp_max");
-                    Double maxa = Double.valueOf(max);
-                    String max_ = String.valueOf(maxa.intValue());
-
-                    String humi = jsonObjectMain.getString("humidity");
-                    Double humia = Double.valueOf(humi);
-                    String humidi = String.valueOf(humia.intValue());
-
-                    String pres = jsonObjectMain.getString("pressure");
-                    Double presa = Double.valueOf(pres);
-                    String pressu = String.valueOf(presa.intValue());
-
-                    String fells_ = jsonObjectMain.getString("feels_like");
-                    Double aa = Double.valueOf(fells_);
-                    String fells_temp = String.valueOf(aa.intValue());
-
-                    JSONObject jsonObjectWind = jsonObject.getJSONObject("wind");
-                    String speed = jsonObjectWind.getString("speed");
+                double lonn=coord.getDouble("lon");
+                double latt=coord.getDouble("lat");
+                long dtt=jsonObject.getLong("dt");
 
 
 
-                    //ngày
-                    String day1=jsonObject.getString("dt");//
-                    //ép kiểu
-                    Long l= Long.valueOf(day1);
-                    Date date=new Date(l*1000L);
-                    SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE");
-                    String Day= simpleDateFormat.format(date);//ngày
+                return new Weather(status,temp,city, latt, lonn, dtt, tempmin, tempmax, sunset, sunrise, pressure, humidity, wind, fells_like);
+            }catch (Exception ex) {
 
-                    //MT mọc, lặn
-
-                    JSONObject jsonObjectSys=jsonObject.getJSONObject("sys");
-                    String sunrise1=jsonObjectSys.getString("sunrise");
-                    Long rise=Long.valueOf(sunrise1);
-                    Date dateRise=new Date(rise*1000L);
-                    SimpleDateFormat simpleDateFormat1=new SimpleDateFormat("hh:mm");
-                    String SunRise=simpleDateFormat1.format(dateRise);
-
-
-                    String sunset1=jsonObjectSys.getString("sunset");
-                    Long set=Long.valueOf(sunset1);
-                    Date dateSet=new Date(set*1000L);
-                    String SunSet=simpleDateFormat1.format(dateSet);
-
-                    city_name=city;
-                    fells_like=fells_temp;
-                    pressure=pressu;
-                    wind=speed;
-                    humidity=humidi;
-                    sunset=SunSet;
-                    sunrise=SunRise;
-                    tempmin=min_;
-                    tempmax=max_;
-                    day=Day;
-                    days="Today";
-                    main=mains;
-                    temp=temper;
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                Log.e("Retrieve Data Failed",ex.toString() );
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                String text="NOT FOND YOUR CITY, PLEASE TRY ANOTHER CITY";
-                view_search.setText("");
-                Toast.makeText(FirstActivity.this, text,Toast.LENGTH_LONG).show();
-            }
-        });
-        requestQueue.add(stringRequest);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            if(weather==null){
+                alertDialog.show();
+            }else{
+            super.onPostExecute(weather);
+                btn_xemthem.setVisibility(View.VISIBLE);
+            view_city.setText(weather.getCityName());
+            City=weather.getCityName();
+            double tempe= weather.getTemp()-273.15;
+            tempe=Math.round(tempe);
+            view_temp.setText(String.valueOf(tempe + "°C"));
+
+            temp=String.valueOf(tempe);
+
+            view_mains.setText(weather.getStatus());
+            main=weather.getStatus();
+
+            lat=String.valueOf(weather.getLat());
+            lon=String.valueOf(weather.getLon());
+
+            Long l= Long.valueOf(weather.getDt());
+            Date date=new Date(l*1000L);
+            SimpleDateFormat simpleDateFormat=new SimpleDateFormat("EEEE");
+            day= String.valueOf(weather.getDt());
+
+            dt=String.valueOf(weather.getDt());
+
+            tempmin=weather.getTempmin();
+            tempmax=weather.getTempmax();
+            sunset=weather.getSunset();
+            sunrise=weather.getSunrise();
+            pressure=weather.getPressure();
+            humidity=weather.getHumidity();
+            wind=weather.getWind();
+            fells_like=weather.getFells_like();
+        }
+        }
     }
+
 }
+
